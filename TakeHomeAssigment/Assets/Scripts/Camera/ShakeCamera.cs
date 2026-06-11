@@ -1,5 +1,4 @@
 using Unity.Cinemachine;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class ShakeCamera : MonoBehaviour

@@ -25,35 +25,36 @@ public class PutBolt : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (!once)
+        if (once) return;
+
+        if (Buttons.instance.pause) return;
+
+        if (canTouch)
         {
-            if (canTouch)
+            once = true;
+
+            if (corutineChangeEmission != null)
             {
-                once=true;  
+                StopCoroutine(corutineChangeEmission);
+            }
 
-                if (corutineChangeEmission != null)
+            ChangeEmission(0);
+
+            LeanTween.moveY(bolt, transform.position.y + offsetMax, .8f).setOnComplete(() =>
+            {
+                LeanTween.rotate(bolt, new Vector3(90, 0, 180), .9f).setDelay(0.1f);
+                LeanTween.moveY(bolt, transform.position.y - offsetMin, 1f).setEase(LeanTweenType.easeInSine).setOnComplete(() =>
                 {
-                    StopCoroutine(corutineChangeEmission);
-                }
-
-                ChangeEmission(0);
-
-                LeanTween.moveY(bolt, transform.position.y + offsetMax, .8f).setOnComplete(() =>
-                {
-                    LeanTween.rotate(bolt, new Vector3(90, 0, 180), .9f).setDelay(0.1f);
-                    LeanTween.moveY(bolt, transform.position.y - offsetMin, 1f).setEase(LeanTweenType.easeInSine).setOnComplete(() =>
-                    {
-                        ScrewSequence.Instance.NextBolt();
-                        this.enabled = false;
-                    });
+                    ScrewSequence.Instance.NextBolt();
+                    this.enabled = false;
                 });
-            }
-            else
-            {
-                ShakeCamera.Instance.CameraMove(1, .1f, 1);
+            });
+        }
+        else
+        {
+            ShakeCamera.Instance.CameraMove(1, .1f, 1);
 
-                StartCoroutine(ChangeColor());
-            }
+            StartCoroutine(ChangeColor());
         }
     }
 

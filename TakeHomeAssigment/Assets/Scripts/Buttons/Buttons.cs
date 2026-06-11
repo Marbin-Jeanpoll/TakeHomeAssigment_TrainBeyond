@@ -1,10 +1,18 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Buttons : MonoBehaviour
 {
-    [SerializeField] bool pause;
+    public static Buttons instance;
+
+    public bool pause;
     [SerializeField] CanvasGroup panelPause, buttonPause, panelFade;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -52,7 +60,8 @@ public class Buttons : MonoBehaviour
         panelFade.gameObject.SetActive(true);
         LeanTween.alphaCanvas(panelFade, 1, 0.3f).setIgnoreTimeScale(true).setOnComplete(() =>
         {
-            Application.Quit();
+            //Application.Quit();
+            EditorApplication.isPlaying = false;
         });
     }
 }
